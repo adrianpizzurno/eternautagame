@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Eternauta: La Adivinanza Profunda</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@400;700&family=Bangers&display=swap" rel="stylesheet">
+</head>
+<body class="eterna-body">
+    <div id="google_translate_element_wrapper">
+        <div id="google_translate_element"></div>
+    </div>
+
+    <div class="decorative-bg-overlay image-eter1-overlay">
+        <img src="images/eter1.png" alt="El Eternauta Caminando">
+    </div>
+    <!-- eter2.jpg se usa para el header, eter3.jpg para el body -->
+
+    <div class="container">
+        <header class="comic-panel header-panel">
+             <div class="header-overlay"></div>
+             <div class="header-top-elements">
+                <img src="images/as-de-espadas.png" class="truco-card-header left-card" alt="As de Espadas">
+                <div class="header-text-content">
+                    <h1 class="game-title">EL ETERNAUTA</h1>
+                    <p class="subtitle">RESISTENCIA EN LA NIEVE</p>
+                </div>
+                <img src="images/as-de-treboles.png" class="truco-card-header right-card" alt="As de Tréboles">
+             </div>
+            <img src="images/osterheld.jpg" class="osterheld-portrait-header" alt="H.G. Oesterheld">
+            <div class="score-area"><span class="score-label">Puntos:</span> <span id="score">0</span></div>
+            <div class="malvinas-ribbon"></div>
+        </header>
+
+        <main id="game-area">
+            <section id="start-screen" class="game-section active comic-panel">
+                <div class="panel-content">
+                    <h2>¡Prepárate para la Nevadaprofunda!</h2>
+                    <p>Responde preguntas sobre el cómic original y la serie de Netflix.</p>
+                    <p class="truco-phrase">"¡Falta Envido y TRUCO!"</p>
+                    <div class="world-cup-stars">
+                        <span class="star gold">★</span><span class="star gold">★</span><span class="star gold">★</span>
+                    </div>
+                    <button id="start-button" class="comic-button nevada-button">Comenzar Juego</button>
+                    <p class="credits">Basado en la obra de H.G. Oesterheld y F. Solano López</p>
+                    <div class="street-sign">Plaza Italia</div>
+                </div>
+            </section>
+
+            <section id="quiz-screen" class="game-section comic-panel hidden">
+                <div class="panel-content">
+                    <p class="question-counter"><span id="current-q">1</span> / <span id="total-q"></span></p>
+                    <h3 id="riddle-text" class="riddle-text"></h3>
+                    <div id="answer-options" class="answer-options"></div>
+                    <p id="feedback" class="feedback"></p>
+                    <div class="navigation-buttons">
+                        <button id="prev-button" class="comic-button nav-button hidden">Anterior</button>
+                        <button id="skip-button" class="comic-button nav-button skip-button">Omitir</button>
+                        <button id="next-button" class="comic-button nav-button next-button hidden">Siguiente</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="end-screen" class="game-section comic-panel hidden">
+                <div class="panel-content">
+                    <h2 class="end-game-title">FIN DEL JUEGO</h2>
+                    <p class="final-score-text">Tu puntuación final es: <span id="final-score" class="final-score-value">0</span> puntos.</p>
+                    <p class="invite-friends-text">
+                        Invita amigos a jugar: si se registran para el sorteo y ponen tu email en "Referido por", ¡sumas <strong class="highlight-points">+5 puntos</strong> por cada uno!
+                    </p>
+                    <div id="registration-area" class="registration-area">
+                        <h3>¡Registra tus datos!</h3>
+                        <form id="registration-form">
+                            <label for="player-name">Tu Nombre (para el sorteo y referidos):</label>
+                            <input type="text" id="player-name" required placeholder="Tu nombre exacto">
+                            <label for="player-email">Tu Correo Electrónico (para el sorteo y si te refieren):</label>
+                            <input type="email" id="player-email" required placeholder="tuemail@ejemplo.com">
+                            <label for="player-country">País:</label>
+                            <input type="text" id="player-country" required placeholder="Tu país">
+                            <label for="referred-by-email">Email de quien te invitó (opcional, para que sume puntos):</label>
+                            <input type="email" id="referred-by-email" placeholder="email_amigo@ejemplo.com">
+                            <div class="registration-type">
+                                <label><input type="radio" name="regType" value="score" checked> Registrar Puntuación (Sorteo)</label>
+                                <label><input type="radio" name="regType" value="ai">
+                                    Me interesa aprender cómo crear juegos con IA (Visita el canal)
+                                </label>
+                            </div>
+                            <input type="hidden" id="final-score-input">
+                            <button type="submit" class="comic-button register-button">Enviar Datos</button>
+                        </form>
+                        <p id="registration-feedback" class="feedback"></p>
+                    </div>
+
+                    <div class="donation-section">
+                        <h4>¡Muchas gracias por jugar!</h4>
+                        <p>Si te gustó este juego y consideras apoyar al desarrollador para futuros proyectos, puedes hacerlo aquí:</p>
+                        <div class="donation-links">
+                            <a href="https://cafecito.app/adrianpizzurno" target="_blank" rel="noopener noreferrer" class="comic-button donation-button">
+                                <img src="images/cafecito_logo.png" alt="Cafecito" class="donation-logo"> Invítame un Cafecito (ARG)
+                            </a>
+                            <a href="https://paypal.me/pizzurnoadrian?country.x=AR&locale.x=es_XC" target="_blank" rel="noopener noreferrer" class="comic-button donation-button">
+                                <img src="images/paypal_logo.png" alt="PayPal" class="donation-logo"> Donar con PayPal (Extranjero)
+                            </a>
+                        </div>
+                         <p class="donation-thanks">¡Tu apoyo significa mucho!</p>
+                    </div>
+
+                    <div id="leaderboard-area" class="leaderboard-area">
+                        <h3><span class="leaderboard-title">Mejores Puntuaciones</span></h3>
+                         <div id="leaderboard-loading" class="loading hidden">Cargando leaderboard...</div>
+                        <ol id="leaderboard-list"></ol>
+                        <p class="leaderboard-note sorteo-note">¡Los 3 primeros podrían participar en un sorteo por 2 meses de Canva Pro!</p>
+                        <p class="sorteo-details">Fecha límite para participar: 30/06. Ganador anunciado en la sección Comunidad de <a href="https://www.youtube.com/@AdrianPizzurno/community" target="_blank" rel="noopener noreferrer">YouTube</a> e <a href="https://www.instagram.com/adripizzurno.ia" target="_blank" rel="noopener noreferrer">Instagram</a> de Adrian Pizzurno.</p>
+                    </div>
+                    <button id="restart-button" class="comic-button restart-button">Jugar de Nuevo</button>
+                </div>
+            </section>
+        </main>
+        <footer class="comic-panel footer-panel">
+            <div class="footer-content-wrapper">
+                 <p>"El héroe es siempre colectivo" <br> "Nadie se salva solo"</p>
+                 <div class="location-refs">
+                      <span class="ref-text">Plaza de Mayo, Av. Gral Paz, el Monumental... la lucha continúa.</span>
+                 </div>
+            </div>
+            <img src="images/eter1.png" class="footer-eternauta-silhouette" alt="Silueta Eternauta">
+        </footer>
+        <div class="creator-credit">
+             Creado por Adrian Pizzurno - <a href="https://www.youtube.com/@AdrianPizzurno" target="_blank" rel="noopener noreferrer">@AdrianPizzurno</a>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+          new google.translate.TranslateElement({pageLanguage: 'es', layout: google.translate.TranslateElement.InlineLayout.SIMPLE, autoDisplay: false}, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script src="script.js"></script>
+</body>
+</html>
