@@ -2,7 +2,7 @@
 
 ¡Bienvenido al juego de adivinanzas definitivo para los fanáticos de "El Eternauta"! Pon a prueba tus conocimientos sobre el icónico cómic argentino de Héctor Germán Oesterheld y Francisco Solano López, así como su más reciente adaptación.
 
-[![Screenshot del Juego](images/placeholder_screenshot_1.png)]({eternauta}1_1.jpg)
+![Screenshot del Juego](https://github.com/adrianpizzurno/eternautagame/blob/22755e6f2b6dbbf0a45c52b6a8e42a3dde082bfe/%7Beternauta%7D1_1.jpg)
 <!-- Reemplaza 'images/placeholder_screenshot_1.png' con la ruta a una captura de pantalla real del juego -->
 <!-- Puedes añadir más screenshots si quieres -->
 
@@ -70,9 +70,10 @@ Si deseas clonar este repositorio y poner en marcha tu propia instancia del jueg
 ## 🖼️ Imágenes del Juego
 
 <!-- Reemplaza estos placeholders con tus propias capturas -->
-![Screenshot Pantalla de Inicio](images/placeholder_screenshot_start.png "Pantalla de Inicio")
-![Screenshot Pregunta](images/placeholder_screenshot_quiz.png "Ejemplo de Pregunta")
-![Screenshot Pantalla Final](images/placeholder_screenshot_end.png "Pantalla Final con Leaderboard")
+![Screenshot del Juego](https://github.com/adrianpizzurno/eternautagame/blob/22755e6f2b6dbbf0a45c52b6a8e42a3dde082bfe/%7Beternauta%7D2_1.jpg)
+![Screenshot del Juego](https://github.com/adrianpizzurno/eternautagame/blob/22755e6f2b6dbbf0a45c52b6a8e42a3dde082bfe/%7Beternauta%7D3_1.jpg)
+![Screenshot del Juego](https://github.com/adrianpizzurno/eternautagame/blob/22755e6f2b6dbbf0a45c52b6a8e42a3dde082bfe/%7Beternauta%7D4_1.jpg)
+![Screenshot del Juego](https://github.com/adrianpizzurno/eternautagame/blob/22755e6f2b6dbbf0a45c52b6a8e42a3dde082bfe/%7Beternauta%7D5_1.jpg)
 
 ## 🙏 Agradecimientos y Apoyo
 
