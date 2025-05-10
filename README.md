@@ -26,9 +26,9 @@ Este proyecto fue desarrollado utilizando HTML5, CSS3 y JavaScript puro para el 
 ## 🕹️ ¿Cómo Jugar?
 
 <!-- Si tienes el juego desplegado online, reemplaza el siguiente párrafo con un enlace directo -->
-Actualmente, para jugar, necesitas descargar los archivos y abrir `index.html` en tu navegador.
+Actualmente, para jugar, necesitas descargar los archivos y abrir `https://adrianpizzurno.github.io/eternautagame/` en tu navegador.
 <!-- Ejemplo de enlace a demo:
-**[¡JUEGA AQUÍ!](https://tu-usuario.github.io/tu-repositorio/)**
+**[¡JUEGA AQUÍ!](https://tu-usuario.github.io/tu-repositorio/)**](https://adrianpizzurno.github.io/eternautagame/)
 -->
 
 ## 🛠️ Configuración (Para Desarrolladores o si Quieres Hostearlo Tú Mismo)
