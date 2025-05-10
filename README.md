@@ -2,7 +2,7 @@
 
 ¡Bienvenido al juego de adivinanzas definitivo para los fanáticos de "El Eternauta"! Pon a prueba tus conocimientos sobre el icónico cómic argentino de Héctor Germán Oesterheld y Francisco Solano López, así como su más reciente adaptación.
 
-[![Screenshot del Juego](images/placeholder_screenshot_1.png)](images/placeholder_screenshot_1.png)
+[![Screenshot del Juego](images/placeholder_screenshot_1.png)]({eternauta}1_1.jpg)
 <!-- Reemplaza 'images/placeholder_screenshot_1.png' con la ruta a una captura de pantalla real del juego -->
 <!-- Puedes añadir más screenshots si quieres -->
 
