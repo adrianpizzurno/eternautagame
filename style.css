@@ -67,7 +67,7 @@ body.eterna-body::before {
     left: -80px;
     width: 60vw;
     max-width: 450px;
-    opacity: 0.50; /* Un poco más visible */
+    opacity: 0.30; /* Un poco más visible */
     transform: rotate(-10deg);
     filter: drop-shadow(5px 5px 8px rgba(0,0,0,0.8));
 }
@@ -123,7 +123,7 @@ body.eterna-body::before {
     gap: 15px;
 }
 .truco-card-header {
-    width: 50px; /* Más pequeñas */
+    width: 35px; /* Más pequeñas */
     height: auto;
     opacity: 0.25; /* Más sutiles */
     filter: drop-shadow(1px 1px 1px #000) grayscale(60%);
@@ -462,7 +462,7 @@ h3 {
     box-shadow: 0 4px 4px rgba(0,0,0,0.3);
 }
 .truco-phrase {
-    font-family: 'Bangers', cursive; font-size: 2em; color: #5d0000; 
+    font-family: 'Bangers', cursive; font-size: 2em; color: #d33333; 
     margin: 30px 0; text-shadow: 2px 2px 0 #000, 3px 3px #ffc107;
 }
 .world-cup-stars {
