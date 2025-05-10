@@ -67,7 +67,7 @@ body.eterna-body::before {
     left: -80px;
     width: 60vw;
     max-width: 450px;
-    opacity: 0.30; /* Un poco más visible */
+    opacity: 0.50; /* Un poco más visible */
     transform: rotate(-10deg);
     filter: drop-shadow(5px 5px 8px rgba(0,0,0,0.8));
 }
@@ -123,7 +123,7 @@ body.eterna-body::before {
     gap: 15px;
 }
 .truco-card-header {
-    width: 35px; /* Más pequeñas */
+    width: 50px; /* Más pequeñas */
     height: auto;
     opacity: 0.25; /* Más sutiles */
     filter: drop-shadow(1px 1px 1px #000) grayscale(60%);
@@ -191,7 +191,7 @@ body.eterna-body::before {
 /* .leaderboard-note.sorteo-note, y .sorteo-details estén como en la última respuesta */
 /* Aquí pego esas secciones para asegurar: */
 h2 {
-    color: #7b0000; font-family: 'Bangers', cursive; font-size: 2.8em;
+    color: #ee1515; font-family: 'Bangers', cursive; font-size: 2.8em;
     margin-bottom: 25px; text-shadow: 1px 1px 0 #000;
 }
 .end-game-title {
