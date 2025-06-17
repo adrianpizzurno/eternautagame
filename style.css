@@ -28,6 +28,32 @@ body.eterna-body::before {
     z-index: -2; /* Detrás de todo */
 }
 
+body.eterna-body::after { /* Drifting Snow Effect */
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(4px 4px at 10% 30%, white, transparent),
+                      radial-gradient(3px 3px at 50% 60%, white, transparent),
+                      radial-gradient(2px 2px at 80% 10%, white, transparent),
+                      radial-gradient(4px 4px at 30% 80%, white, transparent),
+                      radial-gradient(3px 3px at 70% 15%, white, transparent),
+                      radial-gradient(2px 2px at 90% 45%, white, transparent);
+    background-size: 600px 600px; /* Adjust size of the repeating pattern area */
+    animation: snowfall 20s linear infinite;
+    opacity: 0.25; /* Subtle effect - adjusted from 0.3 */
+    pointer-events: none;
+    z-index: -1; /* Between dark overlay and background image/content */
+}
+
+@keyframes snowfall {
+    0% { background-position: 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px, 0px 0px; }
+    100% { background-position: 600px 1200px, 500px 500px, 700px 700px, 800px 1600px, 400px 400px, 900px 900px; } /* Ensure all defined gradients are animated */
+}
+
+
 /* Google Translate Widget Wrapper */
 #google_translate_element_wrapper {
     position: fixed;
@@ -227,11 +253,50 @@ h3 {
     font-size: 2em; margin-bottom: 25px;
 }
 .riddle-text {
-    font-size: 1.45em; margin-bottom: 35px; font-family: 'Roboto', sans-serif;
-    font-weight: 500; color: #000; background-color: rgba(255, 255, 255, 0.95); 
-    padding: 18px 25px; border-left: 10px solid #7b0000; text-align: left;
-    box-shadow: 4px 4px 10px rgba(0,0,0,0.2); border-radius: 5px; line-height: 1.55;
+    font-size: 1.4em; /* Slightly reduced for balance */
+    margin-bottom: 45px; /* Increased to accommodate tail */
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    color: #000;
+    background-color: #fff; /* Solid white for speech bubble */
+    padding: 20px 25px; /* Adjusted padding */
+    text-align: left;
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.3); /* Adjusted shadow */
+    border-radius: 15px; /* Rounded corners for bubble */
+    line-height: 1.5; /* Adjusted line height */
+    position: relative;
+    border: 3px solid #000; /* Uniform black border */
 }
+
+.riddle-text::after { /* Speech bubble tail border */
+    content: '';
+    position: absolute;
+    bottom: -23px; /* Position the tail below the bubble (border-width of parent + border-width of tail part) */
+    left: 50px;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-top-color: #000; /* Color of the tail's border */
+    border-bottom-width: 0; /* No bottom border for the tail itself */
+    margin-left: -20px;
+}
+
+.riddle-text::before { /* Speech bubble tail inner fill */
+    content: '';
+    position: absolute;
+    bottom: -17px; /* (bottom of after - border-width of before's top) = -23px + (20px - 18px) + border-width of parent = -17px (approx, needs fine tuning based on parent border) -> actually bottom of parent + desired overlap */
+                 /* Simplified: Should be slightly above the ::after tail's top border, inside it */
+                 /* Corrected approach: bottom: -17px (puts it slightly inside the border tail, relative to riddle-text bottom) */
+    left: 50px; /* Align with the ::after element, then adjust margin */
+    width: 0;
+    height: 0;
+    border: 17px solid transparent; /* Slightly smaller than ::after's border */
+    border-top-color: #fff; /* Match bubble background */
+    border-bottom-width: 0; /* No bottom border */
+    margin-left: -17px; /* Center based on its own border width */
+    z-index: 1; /* Ensure it's above the ::after tail border */
+}
+
 .question-counter { font-size: 1.15em; margin-bottom: 22px; color: #333; font-weight: bold; }
 .feedback { font-weight: bold; margin: 22px 0; min-height: 2.3em; font-size: 1.2em; padding: 10px 14px; border-radius: 5px; text-align: center;}
 .feedback.correct { background-color: rgba(39, 174, 96, 0.2); border: 1px solid #27ae60; color: #1e8449; }
@@ -249,12 +314,21 @@ h3 {
     display: inline-block; padding: 18px 35px; font-size: 1.2em; font-weight: bold;
     color: #fff; background-color: #2962ff; border: 2px solid #000;
     box-shadow: 6px 6px 0px #000; cursor: pointer; text-decoration: none;
-    text-transform: uppercase; transition: all 0.1s ease-in-out;
+    text-transform: uppercase; /* transition: all 0.1s ease-in-out; */ /* Replaced by specific transitions */
     font-family: 'Press Start 2P', cursive; letter-spacing: 1.8px; margin-top: 18px;
     border-radius: 4px;
+    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
 }
-.comic-button:hover { background-color: #1e88e5; transform: translate(2px, 2px); box-shadow: 4px 4px 0px #000; }
-.comic-button:active { background-color: #0d47a1; transform: translate(4px, 4px); box-shadow: 2px 2px 0px #000; }
+.comic-button:hover {
+    background-color: #1e88e5;
+    transform: translate(2px, 2px) scale(1.03);
+    box-shadow: 5px 5px 0px #000; /* Slightly adjusted for lift */
+}
+.comic-button:active {
+    background-color: #0d47a1;
+    transform: translate(4px, 4px) scale(0.98);
+    box-shadow: 3px 3px 0px #000; /* Slightly adjusted for pressed */
+}
 .answer-options { display: flex; flex-direction: column; gap: 14px; margin-bottom: 30px; }
 .answer-button {
     width: 100%; box-sizing: border-box; text-align: left;
@@ -262,9 +336,25 @@ h3 {
     font-family: 'Roboto', sans-serif; font-weight: 700; font-size: 1.1em;
     padding: 16px 25px; border: 3px solid #333; border-radius: 5px;
     box-shadow: 4px 4px 0 #999;
+    transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out, border-color 0.1s ease-in-out;
 }
-.answer-button:hover { background-color: #e0e0e0; border-color: #000; }
-.answer-button:disabled { opacity: 0.9; cursor: default; background-color: #cccccc !important; }
+.answer-button:hover {
+    background-color: #e0e0e0;
+    border-color: #000;
+    transform: scale(1.03);
+    box-shadow: 6px 6px 0 #777; /* Lift effect */
+}
+.answer-button:active {
+    transform: scale(0.98);
+    box-shadow: 3px 3px 0 #555; /* Pressed effect */
+    background-color: #d0d0d0; /* Slightly darker when pressed */
+    border-color: #000;
+}
+.answer-button:disabled {
+    opacity: 0.9; cursor: default; background-color: #cccccc !important;
+    transform: scale(1); /* Ensure no transform on disabled */
+    box-shadow: 4px 4px 0 #999; /* Reset box shadow */
+}
 .answer-button.correct-option-highlight {
     border: 4px dashed #1e8449 !important; 
     box-shadow: 0 0 12px rgba(39, 174, 96, 0.7) !important;
@@ -310,12 +400,42 @@ h3 {
     box-shadow: 2px 2px 0px #757575;
 }
 
+/* Audio Control Button */
+.audio-control-button {
+    padding: 10px 15px; /* Adjusted padding */
+    font-size: 1em;  /* Adjusted font size to be more balanced with other header elements */
+    min-width: auto;
+    margin-left: 15px; /* Spacing from other elements */
+    background-color: #4CAF50; /* Green for sound on */
+    color: white;
+    border: 2px solid #000; /* Consistent border */
+    /* box-shadow is inherited from .comic-button if not overridden */
+}
+.audio-control-button:hover {
+    background-color: #45a049;
+}
+.audio-control-button.muted {
+    background-color: #f44336; /* Red for sound off */
+}
+.audio-control-button.muted:hover {
+    background-color: #e53935;
+}
+#mute-icon {
+    display: inline-block;
+    font-size: 1.2em; /* Slightly larger icon */
+    line-height: 1;
+}
+/* End Audio Control Button */
+
 .restart-button { background-color: #37474f; color: #fff; margin-top: 45px; } 
 .restart-button:hover { background-color: #263238; }
 .register-button { background-color: #4527a0; color: #fff; margin-top: 35px; } 
 .register-button:hover { background-color: #311b92; }
 
-.game-section { margin: 30px auto; padding: 40px; text-align: center; }
+.game-section {
+    margin: 30px auto; padding: 40px; text-align: center;
+    transition: opacity 0.4s ease-in-out;
+}
 .hidden { display: none !important; }
 
 .score-area {
@@ -327,7 +447,17 @@ h3 {
 .score-label { color: #ffd600; }
 #score { color: #fff; }
 
-.invite-friends-text { 
+@keyframes scorePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); color: #ffd700; } /* Gold color */
+    100% { transform: scale(1); }
+}
+
+.score-updated #score { /* Target the #score span within the .score-area when it has .score-updated */
+    animation: scorePulse 0.5s ease-in-out;
+}
+
+.invite-friends-text {
     margin: 25px 0; font-size: 1.15em; color: #1a1a1a;
     padding: 12px; background-color: rgba(255,255,255,0.75);
     border-radius: 5px; border: 1px dashed #0d47a1;
@@ -470,6 +600,39 @@ h3 {
     text-shadow: 2px 2px 0 #000, 0 0 12px #ffc107; letter-spacing: 12px;
 }
 
+/* --- Answer Feedback Animations --- */
+@keyframes screenShake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-5px); }
+    40%, 80% { transform: translateX(5px); }
+}
+.shake-effect .container { /* Applying to .container when body has .shake-effect */
+    animation: screenShake 0.3s ease-in-out;
+}
+
+@keyframes correctPulse {
+    0%, 100% { box-shadow: 8px 8px 0px #000; } /* Existing box-shadow */
+    50% { box-shadow: 8px 8px 0px #000, 0 0 25px #27ae60, 0 0 15px #2ecc71 inset; }
+}
+.correct-answer-pulse .comic-panel { /* Applying to .comic-panel when its parent/ancestor has .correct-answer-pulse */
+    animation: correctPulse 0.6s ease-in-out;
+}
+/* --- End Answer Feedback Animations --- */
+
+/* Animation for feedback message */
+.feedback {
+    font-weight: bold; margin: 22px 0; min-height: 2.3em; font-size: 1.2em;
+    padding: 10px 14px; border-radius: 5px; text-align: center;
+    opacity: 0; /* Initial state for animation */
+    transform: translateY(10px); /* Initial state for animation */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+.feedback-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* End animation for feedback message */
+
 .street-sign {
     display: inline-block; background-color: #0d47a1; color: #fff;
     padding: 8px 20px; margin-top: 25px; font-family: 'Arial Black', sans-serif;
@@ -492,9 +655,28 @@ h3 {
     .end-game-title { font-size: 2.8em !important; }
     h3 { font-size: 1.5em; }
     .riddle-text { font-size: 1.1em; padding: 10px 15px; margin-bottom: 20px; }
-    .comic-button { padding: 12px 22px; font-size: 0.95em; box-shadow: 3px 3px 0px #000; margin-top: 12px;}
-    .comic-button:active { transform: translate(1px, 1px); box-shadow: 2px 2px 0px #000; }
-    .answer-button { padding: 11px 16px; font-size: 0.9em;}
+    .comic-button {
+        padding: 12px 22px; font-size: 0.95em;
+        box-shadow: 3px 3px 0px #000; margin-top: 12px;
+    }
+    .comic-button:hover {
+        /* background-color: #1e88e5; */ /* Already inherited */
+        transform: translate(1px, 1px) scale(1.03); /* Adjusted for mobile */
+        box-shadow: 2px 2px 0px #000; /* Adjusted for mobile */
+    }
+    .comic-button:active {
+        /* background-color: #0d47a1; */ /* Already inherited */
+        transform: translate(2px, 2px) scale(0.98); /* Adjusted for mobile */
+        box-shadow: 1px 1px 0px #000; /* Adjusted for mobile */
+    }
+    .answer-button {
+        padding: 11px 16px; font-size: 0.9em;
+        /* box-shadow will be inherited or overridden by :hover/:active */
+    }
+    /* answer-button hover/active for mobile will inherit from base, if specific mobile adjustments are needed, add them here */
+    /* For now, relying on the main :hover and :active for .answer-button which include scaling */
+    /* If the translate on comic-button for mobile is too much with scale, it can be reduced or removed */
+
     .truco-phrase { font-size: 1.4em; margin: 18px 0; }
     .world-cup-stars { font-size: 1.8em; letter-spacing: 6px; }
     .navigation-buttons { flex-direction: row; gap: 8px; flex-wrap: wrap; justify-content: center;} /* Permitir que se envuelvan */

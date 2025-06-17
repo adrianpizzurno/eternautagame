@@ -262,6 +262,29 @@ const incorrectFeedbackMessages = [
     "Negativo. Esa info no te salva."
 ];
 
+// --- Audio Player Utility ---
+const soundEffects = {
+    'game-start': new Audio('sounds/game-start.mp3'),
+    'click': new Audio('sounds/click.mp3'),
+    'answer-select': new Audio('sounds/answer-select.mp3'),
+    'correct': new Audio('sounds/correct.mp3'),
+    'incorrect': new Audio('sounds/incorrect.mp3'),
+    'skip': new Audio('sounds/skip.mp3'),
+    'game-end': new Audio('sounds/game-end.mp3'),
+};
+const backgroundMusic = new Audio('sounds/background-music.mp3');
+let isMuted = false; // This will be controlled by the mute button later
+
+function playSound(soundName) {
+    if (isMuted || !soundEffects[soundName]) {
+        return;
+    }
+    const sound = soundEffects[soundName];
+    sound.currentTime = 0; // Rewind to start if already playing
+    sound.play().catch(error => console.warn(`Error playing sound ${soundName}:`, error));
+}
+// --- End Audio Player Utility ---
+
 let currentQuestionIndex = 0;
 let score = 0;
 let shuffledQuestions = [];
@@ -294,13 +317,72 @@ const finalScoreInput = document.getElementById('final-score-input');
 const registrationFeedbackElement = document.getElementById('registration-feedback');
 const leaderboardList = document.getElementById('leaderboard-list');
 const leaderboardLoading = document.getElementById('leaderboard-loading');
+const muteButton = document.getElementById('mute-button');
+const muteIcon = document.getElementById('mute-icon');
 
-startButton.addEventListener('click', startGame);
-nextButton.addEventListener('click', navigateNext);
-prevButton.addEventListener('click', navigatePrevious);
-skipButton.addEventListener('click', skipQuestion);
-restartButton.addEventListener('click', restartGame);
-registrationForm.addEventListener('submit', handleRegistrationSubmit);
+// Initialize background music settings
+backgroundMusic.loop = true;
+backgroundMusic.volume = 0.2; // Adjusted volume
+
+
+function toggleMute() {
+    isMuted = !isMuted;
+    muteButton.classList.toggle('muted', isMuted);
+    muteIcon.textContent = isMuted ? '🔇' : '🔊';
+
+    if (isMuted) {
+        backgroundMusic.pause();
+        // Stop all currently playing short sound effects
+        for (const key in soundEffects) {
+            if (soundEffects.hasOwnProperty(key)) {
+                soundEffects[key].pause();
+                soundEffects[key].currentTime = 0;
+            }
+        }
+    } else {
+        // Only play if game has started or is in a state where music should play
+        // Check if quizScreen is not hidden (game is active)
+        if (!quizScreen.classList.contains('hidden') && backgroundMusic.paused) {
+             backgroundMusic.play().catch(error => console.warn("Error playing background music:", error));
+        }
+        // If on start screen and user un-mutes, music will start when startGame() is called by startButton
+    }
+}
+
+if(muteButton) { // Ensure button exists before adding listener
+    muteButton.addEventListener('click', () => {
+        playSound('click'); // Play click sound for mute button itself, before toggling mute
+        toggleMute();
+    });
+}
+
+
+startButton.addEventListener('click', () => {
+    // playSound('click'); // startButton click sound is now part of its main event listener
+    // playSound('game-start') is in startGame()
+    startGame();
+});
+nextButton.addEventListener('click', () => {
+    playSound('click');
+    navigateNext();
+});
+prevButton.addEventListener('click', () => {
+    playSound('click');
+    navigatePrevious();
+});
+skipButton.addEventListener('click', () => {
+    // playSound('click'); // Removed to prevent double sound. skipQuestion() handles playSound('skip').
+    skipQuestion();
+});
+restartButton.addEventListener('click', () => {
+    playSound('click');
+    restartGame();
+});
+registrationForm.addEventListener('submit', (event) => {
+    // playSound('click'); // Added in handleRegistrationSubmit
+    handleRegistrationSubmit(event);
+});
+
 
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -311,21 +393,58 @@ function startGame() {
     if (!GOOGLE_APPS_SCRIPT_URL || GOOGLE_APPS_SCRIPT_URL.length < 50 || !GOOGLE_APPS_SCRIPT_URL.startsWith("https://script.google.com/macros/s/")) {
         console.warn("ADVERTENCIA: GOOGLE_APPS_SCRIPT_URL no parece ser una URL válida de Google Apps Script en script.js.");
     }
+    playSound('game-start'); // This plays before mute state is checked for background music
+
+    if (!isMuted && backgroundMusic.paused) {
+        backgroundMusic.play().catch(error => console.warn("Error playing background music:", error));
+    }
+
     score = 0;
     currentQuestionIndex = 0;
     scoreElement.textContent = score;
     feedbackElement.textContent = '';
+    feedbackElement.classList.remove('feedback-visible'); // Clear feedback visibility
     registrationFeedbackElement.textContent = '';
     registrationForm.reset();
     leaderboardList.innerHTML = '';
     shuffledQuestions = [...questions].sort(() => 0.5 - Math.random());
     questionStatus = new Array(shuffledQuestions.length).fill(null);
     totalQElement.textContent = shuffledQuestions.length;
-    startScreen.classList.add('hidden');
-    endScreen.classList.add('hidden');
-    quizScreen.classList.remove('hidden');
-    updateNavigationButtonsVisibility();
-    displayQuestion();
+
+    // Determine current screen to fade out
+    let currentScreenToHide = null;
+    if (!startScreen.classList.contains('hidden')) {
+        currentScreenToHide = startScreen;
+    } else if (!endScreen.classList.contains('hidden')) {
+        currentScreenToHide = endScreen;
+    }
+    // Else, if neither is visible (e.g. very first load), currentScreenToHide remains null.
+
+    if (currentScreenToHide) {
+        currentScreenToHide.style.opacity = '0';
+        setTimeout(() => {
+            currentScreenToHide.classList.add('hidden');
+            // currentScreenToHide.style.opacity = ''; // Reset opacity for future use if needed, though not strictly necessary if hidden then opacity set to 0 before showing
+
+            quizScreen.classList.remove('hidden');
+            quizScreen.style.opacity = '0';
+            void quizScreen.offsetWidth; // Reflow
+            quizScreen.style.opacity = '1';
+
+            updateNavigationButtonsVisibility();
+            displayQuestion();
+        }, 400);
+    } else { // First load case, no current screen to hide, just show quizScreen
+        startScreen.classList.add('hidden'); // Ensure start is hidden if it wasn't explicitly the one to hide
+        endScreen.classList.add('hidden');   // Ensure end is hidden
+        quizScreen.classList.remove('hidden');
+        quizScreen.style.opacity = '0';
+        void quizScreen.offsetWidth; // Reflow
+        quizScreen.style.opacity = '1';
+
+        updateNavigationButtonsVisibility();
+        displayQuestion();
+    }
 }
 
 function displayQuestion() {
@@ -338,6 +457,7 @@ function displayQuestion() {
     riddleText.innerHTML = questionData.riddle;
     answerOptionsDiv.innerHTML = '';
     feedbackElement.textContent = '';
+    feedbackElement.classList.remove('feedback-visible'); // Clear feedback visibility before new question
     currentQElement.textContent = currentQuestionIndex + 1;
     const optionsToDisplay = questionData.options;
 
@@ -354,7 +474,10 @@ function displayQuestion() {
                  button.classList.add('correct-option-highlight');
             }
         } else {
-            button.addEventListener('click', () => checkAnswer(option, questionData.answer, button));
+            button.addEventListener('click', () => {
+                playSound('answer-select');
+                checkAnswer(option, questionData.answer, button);
+            });
         }
         answerOptionsDiv.appendChild(button);
     });
@@ -363,9 +486,11 @@ function displayQuestion() {
         if (status.isCorrect !== undefined) { // Si fue respondida (correcta o incorrecta)
             feedbackElement.textContent = status.feedbackMessage;
             feedbackElement.className = `feedback ${status.isCorrect ? 'correct' : 'incorrect'}`;
+            feedbackElement.classList.add('feedback-visible'); // Ensure visibility if re-displaying
         } else if (status.type === 'skipped') { // Si fue omitida
             feedbackElement.textContent = "Pregunta omitida.";
             feedbackElement.className = 'feedback'; // Estilo neutral
+            feedbackElement.classList.add('feedback-visible'); // Ensure visibility if re-displaying
         }
     }
     updateNavigationButtonsVisibility();
@@ -379,15 +504,38 @@ function checkAnswer(selectedOption, correctAnswer, clickedButton) {
     if (isCorrect) {
         score++;
         scoreElement.textContent = score;
+        // Score animation
+        const scoreAreaElement = scoreElement.parentElement; // Assuming scoreElement is #score, parent is .score-area
+        if (scoreAreaElement) {
+            scoreAreaElement.classList.add('score-updated');
+            setTimeout(() => {
+                scoreAreaElement.classList.remove('score-updated');
+            }, 500); // Duration of the animation
+        }
+        // Correct answer pulse/glow
+        quizScreen.classList.add('correct-answer-pulse');
+        setTimeout(() => {
+            quizScreen.classList.remove('correct-answer-pulse');
+        }, 600); // Duration of correctPulse animation
+        playSound('correct');
+
         feedbackMessage = correctFeedbackMessages[Math.floor(Math.random() * correctFeedbackMessages.length)];
         feedbackElement.className = 'feedback correct';
         clickedButton.classList.add('correct');
     } else {
+        // Screen shake for incorrect answer
+        document.body.classList.add('shake-effect');
+        setTimeout(() => {
+            document.body.classList.remove('shake-effect');
+        }, 300); // Duration of screenShake animation
+        playSound('incorrect');
+
         feedbackMessage = incorrectFeedbackMessages[Math.floor(Math.random() * incorrectFeedbackMessages.length)];
         feedbackElement.className = 'feedback incorrect';
         clickedButton.classList.add('incorrect');
     }
     feedbackElement.textContent = feedbackMessage;
+    feedbackElement.classList.add('feedback-visible'); // Show feedback with animation
     questionStatus[currentQuestionIndex] = {
         selectedOption: selectedOption,
         isCorrect: isCorrect,
@@ -405,9 +553,11 @@ function checkAnswer(selectedOption, correctAnswer, clickedButton) {
 
 function skipQuestion() {
     if (questionStatus[currentQuestionIndex]) return;
+    playSound('skip');
     questionStatus[currentQuestionIndex] = { type: 'skipped', feedbackMessage: "Pregunta omitida." };
     feedbackElement.textContent = "Pregunta omitida.";
     feedbackElement.className = 'feedback';
+    feedbackElement.classList.add('feedback-visible'); // Show feedback with animation
     answerOptionsDiv.querySelectorAll('.answer-button').forEach(button => button.disabled = true);
     updateNavigationButtonsVisibility();
     if (currentQuestionIndex < shuffledQuestions.length -1) {
@@ -463,20 +613,32 @@ function updateNavigationButtonsVisibility() {
 }
 
 function endGame() {
-    quizScreen.classList.add('hidden');
-    endScreen.classList.remove('hidden');
-    finalScoreElement.textContent = score;
-    finalScoreInput.value = score;
-    fetchLeaderboard();
+    quizScreen.style.opacity = '0';
+    setTimeout(() => {
+        quizScreen.classList.add('hidden');
+        // quizScreen.style.opacity = ''; // Reset opacity for future
+
+        endScreen.classList.remove('hidden');
+        endScreen.style.opacity = '0';
+        void endScreen.offsetWidth; // Reflow
+        endScreen.style.opacity = '1';
+
+        finalScoreElement.textContent = score;
+        finalScoreInput.value = score;
+        fetchLeaderboard();
+        playSound('game-end');
+    }, 400);
+    backgroundMusic.pause(); // Pause background music when game ends
 }
 
 function restartGame() {
-    endScreen.classList.add('hidden');
+    // startGame will handle fading out endScreen and fading in quizScreen
     startGame();
 }
 
 async function handleRegistrationSubmit(event) {
     event.preventDefault();
+    playSound('click');
     const playerName = playerNameInput.value.trim();
     const playerEmail = playerEmailInput.value.trim();
     const playerCountry = playerCountryInput.value.trim();
@@ -602,8 +764,18 @@ function escapeHTML(str) {
 
 document.addEventListener('DOMContentLoaded', () => {
     startScreen.classList.remove('hidden');
+    startScreen.style.opacity = '1'; // Start screen visible initially
     quizScreen.classList.add('hidden');
+    quizScreen.style.opacity = '0'; // Other screens start transparent and hidden
     endScreen.classList.add('hidden');
+    endScreen.style.opacity = '0';
     scoreElement.textContent = 0;
-    updateNavigationButtonsVisibility();
+
+    // Initialize mute button state
+    if (muteButton && muteIcon) {
+        muteIcon.textContent = isMuted ? '🔇' : '🔊';
+        muteButton.classList.toggle('muted', isMuted);
+    }
+
+    updateNavigationButtonsVisibility(); // Initial call for start screen
 });
